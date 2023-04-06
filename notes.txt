@@ -1,3 +1,5 @@
+start venv
+source venv/bin/activate
 
 documentation:
 https://flask.palletsprojects.com/en/2.2.x/quickstart/
