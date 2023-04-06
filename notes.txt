@@ -1,0 +1,13 @@
+
+documentation:
+https://flask.palletsprojects.com/en/2.2.x/quickstart/
+
+------------------------------------------------------
+
+command to run flask python server:
+# flask --app index run
+
+to enable the server with debug mode, run:
+# flask --app index run --debug
+-- the above mode will show a debug screen listing errors --
+
