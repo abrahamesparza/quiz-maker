@@ -82,28 +82,3 @@ class LoginUser(Resource):
 
 api.add_resource(QuizMaker, '/quiz')
 api.add_resource(LoginUser, '/create_new_user')
-
-# @app.get('/quiz')
-# def showcase_quiz():
-#     quiz_url = 'https://opentdb.com/api.php?amount=5'
-#     response = requests.get(quiz_url)
-#     quiz_data = response.json()
-#     return quiz_data
-
-# """
-# The below is an attempt to understand the use of
-# url_for.
-
-# Still need to learn some more about this.
-# """
-
-# with app.test_request_context():
-#     print(url_for('showcase_landing'))
-
-# Playing with request
-# @app.post('/login')
-# def login_user():
-#     print(request.method)
-#     print(request.data)
-#     return request.data
-
