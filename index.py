@@ -1,15 +1,43 @@
-from ast import literal_eval
-import json
+import os
 import requests
+from sqlalchemy.sql import func
 
+from dataclasses import dataclass
 from flask import Flask, jsonify, url_for, render_template, send_from_directory, request, Response
 from flask_restful import Api, Resource
+from flask_sqlalchemy import SQLAlchemy
 from markupsafe import escape
 
 
 app = Flask(__name__, static_url_path='', static_folder='client/build')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://abrahamesparza@localhost:5432/quiz_db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
 api = Api(app)
 
+@dataclass
+class Users(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(100), nullable=False)
+    password = db.Column(db.String(100), nullable=False)
+    created_at = db.Column(db.DateTime(timezone=True),
+                           server_default=func.now())
+    
+    def __repr__(self) -> str:
+        return f'<User {self.username}>'
+
+
+# GET Users information from db
+@app.get('/db/users')
+def retrieve_users():
+    users = Users.query.all()
+    users_list = []
+    for user in users:
+        user_id = user.id
+        user_name = user.username
+        users_list.append({'id': user_id, 'username': user_name})
+    return users_list
 
 # GET paths
 @app.get('/')
