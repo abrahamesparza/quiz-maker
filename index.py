@@ -1,6 +1,10 @@
+import json
 import os
 import requests
+
+from math import floor
 from sqlalchemy.sql import func
+from sqlalchemy.types import String, Integer, DateTime, JSON
 
 from dataclasses import dataclass
 from flask import Flask, jsonify, url_for, render_template, send_from_directory, request, Response
@@ -18,17 +22,37 @@ api = Api(app)
 
 @dataclass
 class Users(db.Model):
+    __tablename__ = 'users'
+
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), nullable=False)
-    password = db.Column(db.String(100), nullable=False)
-    created_at = db.Column(db.DateTime(timezone=True),
+    first_name = db.Column(String(100), nullable=False)
+    last_name = db.Column(String(100), nullable=False)
+    username = db.Column(String(100), nullable=False)
+    email = db.Column(String(100), nullable=False)
+    password = db.Column(String(100), nullable=False)
+    created_at = db.Column(DateTime(timezone=True),
                            server_default=func.now())
     
     def __repr__(self) -> str:
         return f'<User {self.username}>'
 
 
-# GET Users information from db
+@dataclass
+class Quizzers(db.Model):
+    __tablename__ = 'quizzer'
+
+    id = db.Column(Integer, primary_key=True)
+    correct_responses = db.Column(Integer, nullable=True)
+    incorrect_responses = db.Column(Integer, nullable=True)
+    total_questions = db.Column(Integer, nullable=True)
+    questions = db.Column(JSON, nullable=False)
+    quizzer_id = db.Column(Integer, db.ForeignKey('users.id'))
+
+    def __repr__(self) -> str:
+        return f'<Quizzer {self.quizzer_id}'
+
+
+# GET Users information from database
 @app.get('/db/users')
 def retrieve_users():
     users = Users.query.all()
@@ -39,7 +63,42 @@ def retrieve_users():
         users_list.append({'id': user_id, 'username': user_name})
     return users_list
 
-# GET paths
+@app.get('/db/quizzer')
+def retriever_quizzer():
+    quizzer = Quizzers.query.all()
+    quizzer_list = []
+    for quiz in quizzer:
+        quizzer_id = quiz.quizzer_id
+        total_questions = quiz.total_questions
+        correct_responses = quiz.correct_responses
+        incorrect_responses = quiz.incorrect_responses
+        # questions = quiz.questions - need to fix formatting of how json is stored
+        quizzer_list.append({
+            'quizzer_id': quizzer_id,
+            'total_questions': total_questions,
+            'incorrect_responses': incorrect_responses,
+            'correct_responses': correct_responses,
+            'overall_scrore': floor((correct_responses / total_questions) * 100)
+            })
+    return quizzer_list
+
+
+# POST information to database
+@app.post('/user/signup')
+def signup_user():
+    data = json.loads(request.data)
+    new_user = Users(first_name=data['first_name'],
+                     last_name=data['last_name'],
+                     username=data['username'],
+                     email=data['email'],
+                     password=data['password'])
+    db.session.add(new_user)
+    db.session.commit()
+
+    return send_from_directory(app.static_folder, 'index.html'), 201
+
+# ____________________________________
+# (practice) GET paths
 @app.get('/')
 def serve():
     return send_from_directory(app.static_folder, 'index.html')
