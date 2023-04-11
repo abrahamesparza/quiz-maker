@@ -60,7 +60,8 @@ def retrieve_users():
     for user in users:
         user_id = user.id
         user_name = user.username
-        users_list.append({'id': user_id, 'username': user_name})
+        full_name = f'{user.first_name} {user.last_name}'
+        users_list.append({'id': user_id, 'username': user_name, 'full_name': full_name})
     return users_list
 
 @app.get('/db/quizzer')
