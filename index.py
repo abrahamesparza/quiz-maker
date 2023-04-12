@@ -1,10 +1,11 @@
+import bcrypt
 import json
 import os
 import requests
 
 from math import floor
 from sqlalchemy.sql import func
-from sqlalchemy.types import String, Integer, DateTime, JSON
+from sqlalchemy.types import String, Integer, DateTime, JSON, Text
 
 from dataclasses import dataclass
 from flask import Flask, jsonify, url_for, render_template, send_from_directory, request, Response
@@ -20,6 +21,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 api = Api(app)
 
+salt = bcrypt.gensalt()
+
 @dataclass
 class Users(db.Model):
     __tablename__ = 'users'
@@ -28,8 +31,8 @@ class Users(db.Model):
     first_name = db.Column(String(100), nullable=False)
     last_name = db.Column(String(100), nullable=False)
     username = db.Column(String(100), nullable=False)
-    email = db.Column(String(100), nullable=False)
-    password = db.Column(String(100), nullable=False)
+    email = db.Column(String(100), nullable=False, unique=True)
+    password = db.Column(Text, nullable=False)
     created_at = db.Column(DateTime(timezone=True),
                            server_default=func.now())
     
@@ -51,6 +54,10 @@ class Quizzers(db.Model):
     def __repr__(self) -> str:
         return f'<Quizzer {self.quizzer_id}'
 
+# --------------ROUTES-----------------
+@app.get('/')
+def serve():
+    return send_from_directory(app.static_folder, 'index.html')
 
 # GET Users information from database
 @app.get('/db/users')
@@ -61,7 +68,13 @@ def retrieve_users():
         user_id = user.id
         user_name = user.username
         full_name = f'{user.first_name} {user.last_name}'
-        users_list.append({'id': user_id, 'username': user_name, 'full_name': full_name})
+        password = user.password
+        users_list.append({
+            'id': user_id,
+            'username': user_name,
+            'full_name': full_name,
+            'password': password
+            })
     return users_list
 
 @app.get('/db/quizzer')
@@ -88,33 +101,17 @@ def retriever_quizzer():
 @app.post('/user/signup')
 def signup_user():
     data = json.loads(request.data)
-    new_user = Users(first_name=data['first_name'],
-                     last_name=data['last_name'],
+    password = data['password'].encode('utf-8')
+    hashed_pw = bcrypt.hashpw(password, salt)
+    new_user = Users(first_name=data['firstName'],
+                     last_name=data['lastName'],
                      username=data['username'],
                      email=data['email'],
-                     password=data['password'])
+                     password=hashed_pw)
     db.session.add(new_user)
     db.session.commit()
 
     return send_from_directory(app.static_folder, 'index.html'), 201
-
-# ____________________________________
-# (practice) GET paths
-@app.get('/')
-def serve():
-    return send_from_directory(app.static_folder, 'index.html')
-
-@app.get('/landing')
-def showcase_landing():
-    return render_template('landing.html')
-
-@app.get('/projects')
-def showcase_projects():
-    return '<p>list projects here</p>'
-
-@app.get('/project/<path:name>')
-def showcase_project_by_name(name):
-    return f'Project: {escape(name)}'
 
 
 class QuizMaker(Resource):
@@ -133,12 +130,14 @@ class QuizMaker(Resource):
         print(f'data!: {results}')
         return results
     
+api.add_resource(QuizMaker, '/quiz')
 
-class LoginUser(Resource):
-    def post(self):
-        data = request.data
-        return Response(data, status=201, mimetype='application/json')
+
+# class LoginUser(Resource):
+#     def post(self):
+#         data = request.data
+#         return Response(data, status=201, mimetype='application/json')
     
 
-api.add_resource(QuizMaker, '/quiz')
-api.add_resource(LoginUser, '/create_new_user')
+
+# api.add_resource(LoginUser, '/create_new_user')
