@@ -6,15 +6,15 @@ function SignUp( { formData, onChange, onSignUp }) {
         <div className="signupBody">
             <form  className='signupForm' onSubmit={onSignUp}>
                 <p className="form-text">Sign Up For Access</p><br/>
-                <label>First Name</label>
+                <label>First Name</label><br/>
                 <input type="text" name="firstName" value={formData.firstName} onChange={onChange} required/><br/>
-                <label>Last Name</label>
+                <label>Last Name</label><br/>
                 <input type="text" name="lastName" value={formData.lastName} onChange={onChange} required/><br/>
-                <label>Username</label>
+                <label>Username</label><br/>
                 <input type="text" name="username" value={formData.username} onChange={onChange} required/><br/>
-                <label>Email</label>
+                <label>Email</label><br/>
                 <input type="text" name="email" value={formData.email} onChange={onChange} required/><br/>
-                <label>Password</label>
+                <label>Password</label><br/>
                 <input type="password" name="password" value={formData.password} onChange={onChange} required/><br/>
                 <button type="submit">Submit</button>
             </form>

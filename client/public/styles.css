@@ -1,4 +1,5 @@
 body {
+    background-color: black;
     padding: 0;
     margin: 0;
     max-width: 100%;
@@ -15,18 +16,19 @@ body {
     display: flex;
     margin: 0 auto;
     padding: 5% 5% 5% 5%;
-    background-color: gray;
-    border: 1px solid black;
+    border: 1px solid white;
     border-radius: 1%;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
     /* font-weight: 500; */
 }
 
 button:hover {
-    background-color: gainsboro;
+    background-color: black;
+    color: green;
 }
 
 p.form-text {
@@ -34,6 +36,7 @@ p.form-text {
 }
 
 .app {
+    color: green;
     font-family: 'Courier New', Courier, monospace;
     text-align: center;
 }
