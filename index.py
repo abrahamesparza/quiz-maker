@@ -103,7 +103,6 @@ def retriever_quizzer():
         total_questions = quiz.total_questions
         correct_responses = quiz.correct_responses
         incorrect_responses = quiz.incorrect_responses
-        # questions = quiz.questions - need to fix formatting of how json is stored
         quizzer_list.append(
             {
                 "quizzer_id": quizzer_id,
@@ -136,7 +135,6 @@ def signup_user():
     resp.set_cookie("cookie_id", secrets.token_urlsafe(16))
 
     return resp
-    # return send_from_directory(app.static_folder, "index.html"), 201
 
 
 class QuizMaker(Resource):
