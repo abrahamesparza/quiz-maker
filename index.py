@@ -2,6 +2,7 @@ import bcrypt
 import json
 import os
 import requests
+import secrets
 
 from math import floor
 from sqlalchemy.sql import func
@@ -16,6 +17,7 @@ from flask import (
     send_from_directory,
     request,
     Response,
+    make_response,
 )
 from flask_restful import Api, Resource
 from flask_sqlalchemy import SQLAlchemy
@@ -130,7 +132,11 @@ def signup_user():
     db.session.add(new_user)
     db.session.commit()
 
-    return send_from_directory(app.static_folder, "index.html"), 201
+    resp = make_response(send_from_directory(app.static_folder, "index.html"), 201)
+    resp.set_cookie("cookie_id", secrets.token_urlsafe(16))
+
+    return resp
+    # return send_from_directory(app.static_folder, "index.html"), 201
 
 
 class QuizMaker(Resource):
