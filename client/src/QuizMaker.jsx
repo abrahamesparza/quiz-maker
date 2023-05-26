@@ -15,16 +15,6 @@ function QuizMaker({ show }) {
         })
     }, [])
 
-    // working on logic to show/close quiz
-    // function clickCloseQuiz() {
-    //     if (show) {
-    //         setCloseQuiz(false)
-    //     }
-    //     else {
-    //         setCloseQuiz(true)
-    //     }
-    // }
-
     return (
         <div className='quiz_table'>
             {/* working on logic to show/close quiz */}
