@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import TypeWriter from 'typewriter-effect'
 
 import Landing from './Landing';
+import Page from './Page';
 import SignUp from './SignUp';
 
 function App() {
@@ -42,7 +44,24 @@ function App() {
 
   return (
     <div className="app">
-      {userCreated ? <Landing /> : <SignUp formData={formData} onChange={handleChange} onSignUp={handleSignUp}/> }
+
+      <div className='landing-page'>
+        <div className="landing-main">
+          <h1>QUIZ MAKER</h1>
+          <div className="typewriter">
+            <TypeWriter
+            options={{
+                strings: ['Ignite Your Curiosity.', 'Unleash Your Learning.', 'Elevate Your Knowledge.'],
+                autoStart: true,
+                loop: true,
+            }}
+            />
+          </div>
+        </div>
+        
+        <Landing formData={formData} onChange={handleChange} onSignUp={handleSignUp}/>        
+      </div>
+      {/* {userCreated ? <Landing /> : <SignUp formData={formData} onChange={handleChange} onSignUp={handleSignUp}/> } */}
     </div>
   );
 }

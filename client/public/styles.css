@@ -7,23 +7,26 @@ body {
 
 .signupBody {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     padding-top: 5%;
 }
 
-.signupForm, button {
+.signupForm, .loginForm {
     display: flex;
     margin: 0 auto;
     padding: 5% 5% 5% 5%;
-    border: 1px solid white;
-    border-radius: 1%;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'Teko', sans-serif;
     font-weight: bold;
-    /* font-weight: 500; */
+}
+
+
+p.form-text, label {
+    font-size: 24px;
 }
 
 button:hover {
@@ -31,12 +34,34 @@ button:hover {
     color: green;
 }
 
-p.form-text {
-    font-size: 32px;
-}
-
 .app {
     color: green;
     font-family: 'Courier New', Courier, monospace;
     text-align: center;
+}
+
+
+/* LANDING CSS */
+
+.landing-page {
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: 80% 20%;
+    width: 100%;
+    height: 100%;
+    font-family: 'Teko', sans-serif;
+}
+.landing-nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    gap: 3%;
+    padding-top: 1vh;
+}
+.landing-main {
+    font-size: 36px;
+}
+.typewriter {
+    font-size: 24px;
 }

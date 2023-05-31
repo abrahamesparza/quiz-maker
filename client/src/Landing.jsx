@@ -1,9 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
+import TypeWriter from 'typewriter-effect'
+import Page from "./Page";
 
-function Landing() {
+function Landing({ formData, handleChange, handleSignUp }) {
+    let [page, setPage] = useState('')
+
+    function handleComponentRender(e) {
+        if (!page) {
+            setPage(e.target.name)
+        }
+        else if (page !== e.target.name) {
+            setPage(e.target.name)
+        }
+        else {
+            setPage('')
+        }
+    }
+
+    console.log('page:', page)
     return (
-        <div className="landing-page">
-            <h1>hi, you've reached the landing page.</h1>
+        <div>
+            <div className="landing-nav">
+                <button onClick={handleComponentRender} name="signup" className="form-button">Sign Up</button>
+                <button onClick={handleComponentRender} name="login" className="form-button">Log In</button>
+            </div>
+            <Page page={page} formData={formData} onChange={handleChange} onSignUp={handleSignUp}/>
         </div>
     )
 }
