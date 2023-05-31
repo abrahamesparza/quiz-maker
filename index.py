@@ -158,10 +158,10 @@ class QuizMaker(Resource):
 api.add_resource(QuizMaker, "/quiz")
 
 
-# class LoginUser(Resource):
-#     def post(self):
-#         data = request.data
-#         return Response(data, status=201, mimetype='application/json')
+class LoginUser(Resource):
+    def login_user():
+        data = json.loads(request.data)
+        # check if a user exists on attempted login
 
 
-# api.add_resource(LoginUser, '/create_new_user')
+api.add_resource(LoginUser, "/user/login")
